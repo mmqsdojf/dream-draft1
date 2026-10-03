@@ -1,0 +1,3504 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>DREAM DRAFT ✨</title>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:
+        radial-gradient(circle at 0% 0%,#ffd8eb,transparent 30%),
+        radial-gradient(circle at 100% 0%,#ccefff,transparent 30%),
+        radial-gradient(circle at 50% 100%,#ddd2ff,transparent 35%),
+        linear-gradient(135deg,#fff8fc,#eefaff,#f8f2ff);
+}
+
+button,input{
+    font-family:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+    touch-action:manipulation;
+}
+
+input{
+    touch-action:manipulation;
+}
+
+#app{
+    width:100%;
+    height:100dvh;
+    overflow:hidden;
+}
+
+.screen{
+    display:none;
+    width:100%;
+    height:100dvh;
+    overflow:hidden;
+    padding:6px;
+}
+
+.screen.active{
+    display:flex;
+    flex-direction:column;
+}
+
+.inner{
+    width:min(1050px,100%);
+    height:100%;
+    min-height:0;
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+}
+
+.header{
+    flex:0 0 auto;
+    text-align:center;
+    padding:8px 0;
+}
+
+.logo{
+    font-size:clamp(35px,8vw,62px);
+    line-height:.95;
+    font-weight:1000;
+    letter-spacing:-3px;
+    background:linear-gradient(90deg,#ff4f9a,#8958ff,#16bce8);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.subtitle{
+    margin-top:5px;
+    color:#666b7b;
+    font-size:13px;
+    font-weight:700;
+}
+
+.center{
+    flex:1;
+    min-height:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.bottom{
+    flex:0 0 auto;
+    padding-top:7px;
+}
+
+.primary{
+    width:min(550px,100%);
+    min-height:50px;
+    border-radius:16px;
+    color:white;
+    font-size:15px;
+    font-weight:1000;
+    background:linear-gradient(90deg,#ff4f9a,#8958ff);
+    box-shadow:0 9px 22px rgba(130,80,255,.22);
+}
+
+.primary:disabled{
+    opacity:.4;
+}
+
+.back{
+    min-height:40px;
+    padding:0 13px;
+    border-radius:13px;
+    background:white;
+    color:#303344;
+    font-weight:1000;
+}
+
+.topbar{
+    flex:0 0 auto;
+    display:grid;
+    grid-template-columns:80px 1fr 80px;
+    align-items:center;
+    gap:5px;
+}
+
+.page-title{
+    text-align:center;
+    color:#303344;
+    font-size:clamp(21px,5vw,32px);
+    font-weight:1000;
+}
+
+/* START */
+
+.menu{
+    width:min(850px,100%);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.menu-button{
+    min-height:115px;
+    padding:16px;
+    border-radius:22px;
+    background:white;
+    text-align:left;
+    color:#303344;
+    box-shadow:0 10px 25px rgba(50,50,90,.09);
+}
+
+.menu-button:active{
+    transform:scale(.98);
+}
+
+.menu-icon{
+    display:block;
+    font-size:35px;
+    margin-bottom:6px;
+}
+
+.menu-title{
+    display:block;
+    font-size:18px;
+    font-weight:1000;
+}
+
+.menu-description{
+    display:block;
+    margin-top:4px;
+    color:#73798a;
+    font-size:12px;
+    font-weight:600;
+}
+
+/* CARD */
+
+.card{
+    width:min(720px,100%);
+    padding:16px;
+    border-radius:24px;
+    background:rgba(255,255,255,.95);
+    box-shadow:0 14px 35px rgba(50,50,90,.11);
+}
+
+/* ONLINE */
+
+.online-wrapper{
+    width:min(900px,100%);
+}
+
+.online-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.online-box{
+    padding:14px;
+    border-radius:19px;
+    background:#f5f6fa;
+    text-align:center;
+}
+
+.online-box h2{
+    margin:2px 0 9px;
+    color:#303344;
+    font-size:18px;
+}
+
+.online-status{
+    min-height:43px;
+    margin:8px 0;
+    padding:9px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:12px;
+    background:white;
+    color:#626879;
+    font-size:12px;
+    font-weight:800;
+}
+
+.room-code{
+    margin:5px 0;
+    color:#8958ff;
+    font-size:clamp(38px,8vw,58px);
+    line-height:1;
+    letter-spacing:6px;
+    font-weight:1000;
+}
+
+.code-input{
+    width:100%;
+    height:50px;
+    border:3px solid #dedfe8;
+    border-radius:13px;
+    background:white;
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing:5px;
+    font-size:22px;
+    font-weight:1000;
+    outline:none;
+}
+
+.code-input:focus{
+    border-color:#8958ff;
+}
+
+.online-next{
+    display:none;
+    margin-top:8px;
+}
+
+.online-next.show{
+    display:block;
+}
+
+/* WAITING */
+
+.waiting-card{
+    width:min(600px,100%);
+    padding:25px;
+    border-radius:25px;
+    background:white;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(50,50,90,.12);
+}
+
+.waiting-icon{
+    font-size:55px;
+}
+
+.waiting-title{
+    margin-top:7px;
+    color:#303344;
+    font-size:25px;
+    font-weight:1000;
+}
+
+.waiting-text{
+    margin-top:8px;
+    color:#6b7080;
+    font-size:14px;
+    line-height:1.45;
+    font-weight:700;
+}
+
+/* THEMA */
+
+.theme-area{
+    flex:1;
+    min-height:0;
+    display:flex;
+    align-items:center;
+}
+
+.grid{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+}
+
+.choice{
+    min-height:70px;
+    border-radius:17px;
+    background:white;
+    border:3px solid transparent;
+    color:#303344;
+    font-size:12px;
+    font-weight:900;
+    box-shadow:0 6px 15px rgba(50,50,90,.07);
+}
+
+.choice.selected{
+    color:white;
+    background:linear-gradient(135deg,#ff5ba5,#8958ff);
+}
+
+.choice-icon{
+    display:block;
+    font-size:24px;
+    margin-bottom:3px;
+}
+
+/* SETTINGS */
+
+.setting{
+    background:#f5f6fa;
+    padding:11px;
+    border-radius:15px;
+    margin-bottom:8px;
+}
+
+.setting-title{
+    margin-bottom:6px;
+    color:#303344;
+    font-size:13px;
+    font-weight:1000;
+}
+
+.options{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+}
+
+.option{
+    min-height:42px;
+    border-radius:11px;
+    background:white;
+    border:2px solid #e1e2ea;
+    color:#444858;
+    font-size:11px;
+    font-weight:900;
+}
+
+.option.selected{
+    background:#303344;
+    border-color:#303344;
+    color:white;
+}
+
+/* GAME */
+
+.game{
+    padding:5px;
+}
+
+.game-layout{
+    width:min(1250px,100%);
+    height:100%;
+    min-height:0;
+    margin:auto;
+    display:grid;
+    grid-template-rows:auto 1fr;
+    gap:5px;
+}
+
+.game-header{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:5px;
+    align-items:center;
+}
+
+.money-box{
+    padding:6px 10px;
+    border-radius:14px;
+    background:white;
+    box-shadow:0 6px 16px rgba(50,50,90,.08);
+}
+
+.money-box.right{
+    text-align:right;
+}
+
+.name{
+    color:#626778;
+    font-size:10px;
+    font-weight:1000;
+}
+
+.money{
+    color:#269862;
+    font-size:22px;
+    font-weight:1000;
+}
+
+.round{
+    text-align:center;
+    color:#36394a;
+    font-size:11px;
+    font-weight:1000;
+}
+
+.auction{
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(105px,.7fr) minmax(280px,1.6fr) minmax(105px,.7fr);
+    gap:6px;
+}
+
+.collection-panel{
+    min-height:0;
+    overflow:hidden;
+    padding:6px;
+    border-radius:17px;
+    background:rgba(255,255,255,.82);
+    box-shadow:0 7px 20px rgba(50,50,90,.07);
+}
+
+.panel-title{
+    margin-bottom:5px;
+    text-align:center;
+    color:#555a6a;
+    font-size:9px;
+    font-weight:1000;
+}
+
+.collection{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-content:flex-start;
+    gap:4px;
+}
+
+.collection-item{
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:white;
+    font-size:20px;
+    box-shadow:0 3px 9px rgba(50,50,90,.08);
+}
+
+.center-auction{
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.item-card{
+    width:min(520px,100%);
+    min-height:210px;
+    padding:15px;
+    border-radius:25px;
+    background:white;
+    text-align:center;
+    box-shadow:0 13px 35px rgba(50,50,90,.11);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.item-icon{
+    font-size:clamp(52px,9vw,82px);
+    line-height:1;
+}
+
+.category{
+    margin-top:6px;
+    color:#8958ff;
+    font-size:10px;
+    font-weight:1000;
+    text-transform:uppercase;
+}
+
+.item-name{
+    margin-top:4px;
+    color:#292c3d;
+    font-size:clamp(21px,4vw,36px);
+    line-height:1.05;
+    font-weight:1000;
+}
+
+.bid-info{
+    margin-top:7px;
+    color:#666b7b;
+    font-size:12px;
+    font-weight:800;
+}
+
+.leader{
+    margin-top:3px;
+    color:#ff4f9a;
+    font-size:14px;
+    font-weight:1000;
+}
+
+.comment{
+    width:min(520px,100%);
+    min-height:18px;
+    padding-top:4px;
+    color:#656a7a;
+    text-align:center;
+    font-size:10px;
+    font-weight:700;
+}
+
+.bid-row{
+    width:min(650px,100%);
+    display:grid;
+    grid-template-columns:1fr 140px;
+    gap:5px;
+    margin-top:4px;
+}
+
+.bid-input{
+    width:100%;
+    height:50px;
+    border:3px solid #dedfe8;
+    border-radius:14px;
+    background:white;
+    text-align:center;
+    font-size:19px;
+    font-weight:1000;
+    outline:none;
+}
+
+.bid-input:disabled{
+    background:#eff0f4;
+}
+
+.bid-button{
+    border-radius:14px;
+    color:white;
+    background:linear-gradient(135deg,#ff4f9a,#8958ff);
+    font-size:15px;
+    font-weight:1000;
+}
+
+.bid-button:disabled{
+    opacity:.35;
+}
+
+.give{
+    width:min(650px,100%);
+    min-height:39px;
+    margin-top:5px;
+    border-radius:12px;
+    background:#eff0f5;
+    color:#474b5b;
+    font-size:11px;
+    font-weight:900;
+}
+
+.give:disabled{
+    opacity:.35;
+}
+
+.turn{
+    min-height:18px;
+    margin-top:3px;
+    text-align:center;
+    color:#8958ff;
+    font-size:10px;
+    font-weight:1000;
+}
+
+/* RESULT */
+
+.result-card{
+    text-align:center;
+}
+
+.trophy{
+    font-size:58px;
+}
+
+.result-title{
+    color:#303344;
+    font-size:clamp(27px,7vw,47px);
+    font-weight:1000;
+}
+
+.result-subtitle{
+    margin:6px 0 15px;
+    color:#676c7c;
+    font-size:12px;
+    font-weight:700;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:13px;
+}
+
+.result-player{
+    padding:11px;
+    border-radius:14px;
+    background:#f5f6fa;
+    color:#303344;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    z-index:99999;
+    max-width:90%;
+    padding:11px 16px;
+    border-radius:13px;
+    background:#292c3d;
+    color:white;
+    text-align:center;
+    font-size:12px;
+    font-weight:900;
+    transform:translate(-50%,150px);
+    transition:.25s;
+}
+
+.toast.show{
+    transform:translate(-50%,0);
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .screen{
+        padding:4px 5px;
+    }
+
+    .header{
+        padding:4px 0;
+    }
+
+    .logo{
+        font-size:36px;
+    }
+
+    .subtitle{
+        font-size:10px;
+    }
+
+    .menu{
+        grid-template-columns:1fr;
+        gap:6px;
+    }
+
+    .menu-button{
+        min-height:63px;
+        padding:9px 11px;
+        border-radius:17px;
+    }
+
+    .menu-icon{
+        display:inline;
+        font-size:25px;
+        margin-right:5px;
+    }
+
+    .menu-title{
+        display:inline;
+        font-size:15px;
+    }
+
+    .menu-description{
+        margin:2px 0 0 31px;
+        font-size:9px;
+    }
+
+    .topbar{
+        grid-template-columns:70px 1fr 20px;
+    }
+
+    .back{
+        min-height:36px;
+        padding:0 8px;
+        font-size:11px;
+    }
+
+    .page-title{
+        font-size:20px;
+    }
+
+    .online-columns{
+        grid-template-columns:1fr;
+        gap:7px;
+    }
+
+    .online-box{
+        padding:9px;
+    }
+
+    .online-box h2{
+        font-size:15px;
+        margin:1px 0 5px;
+    }
+
+    .online-status{
+        min-height:34px;
+        margin:5px 0;
+        padding:7px;
+        font-size:9px;
+    }
+
+    .room-code{
+        font-size:38px;
+    }
+
+    .code-input{
+        height:44px;
+        font-size:19px;
+    }
+
+    .online-box .primary{
+        min-height:43px;
+        font-size:13px;
+    }
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:5px;
+    }
+
+    .choice{
+        min-height:57px;
+        border-radius:13px;
+        font-size:10px;
+    }
+
+    .choice-icon{
+        font-size:19px;
+    }
+
+    .setting{
+        padding:8px;
+        margin-bottom:5px;
+    }
+
+    .setting-title{
+        font-size:10px;
+        margin-bottom:4px;
+    }
+
+    .option{
+        min-height:34px;
+        font-size:9px;
+    }
+
+    .primary{
+        min-height:44px;
+        font-size:13px;
+    }
+
+    .waiting-card{
+        padding:18px;
+    }
+
+    .waiting-icon{
+        font-size:45px;
+    }
+
+    .waiting-title{
+        font-size:21px;
+    }
+
+    .waiting-text{
+        font-size:11px;
+    }
+
+    .auction{
+        grid-template-columns:52px minmax(0,1fr) 52px;
+        gap:3px;
+    }
+
+    .collection-panel{
+        padding:3px;
+    }
+
+    .panel-title{
+        font-size:7px;
+    }
+
+    .collection{
+        gap:3px;
+    }
+
+    .collection-item{
+        width:23px;
+        height:23px;
+        font-size:13px;
+    }
+
+    .money-box{
+        padding:4px 6px;
+    }
+
+    .name{
+        font-size:7px;
+    }
+
+    .money{
+        font-size:16px;
+    }
+
+    .round{
+        font-size:8px;
+    }
+
+    .item-card{
+        min-height:158px;
+        padding:9px;
+        border-radius:18px;
+    }
+
+    .item-icon{
+        font-size:50px;
+    }
+
+    .category{
+        font-size:7px;
+    }
+
+    .item-name{
+        font-size:18px;
+    }
+
+    .bid-info{
+        font-size:9px;
+    }
+
+    .leader{
+        font-size:11px;
+    }
+
+    .comment{
+        font-size:8px;
+    }
+
+    .bid-row{
+        grid-template-columns:minmax(0,1fr) 94px;
+    }
+
+    .bid-input{
+        height:43px;
+        font-size:17px;
+    }
+
+    .bid-button{
+        font-size:11px;
+    }
+
+    .give{
+        min-height:34px;
+        font-size:9px;
+    }
+
+    .turn{
+        font-size:8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- START -->
+<section id="screen-start" class="screen active">
+<div class="inner">
+
+<header class="header">
+    <div class="logo">DREAM DRAFT ✨</div>
+    <div class="subtitle">Bouw jouw perfecte wereld door te bieden!</div>
+</header>
+
+<div class="center">
+<div class="menu">
+
+<button class="menu-button" onclick="selectMode('computer')">
+    <span class="menu-icon">🤖</span>
+    <span class="menu-title">Tegen de computer</span>
+    <span class="menu-description">Speel alleen tegen de computer.</span>
+</button>
+
+<button class="menu-button" onclick="selectMode('local')">
+    <span class="menu-icon">👥</span>
+    <span class="menu-title">Samen spelen</span>
+    <span class="menu-description">Twee spelers op hetzelfde apparaat.</span>
+</button>
+
+<button class="menu-button" onclick="openOnline()">
+    <span class="menu-icon">🌐</span>
+    <span class="menu-title">Online spelen</span>
+    <span class="menu-description">Speel op twee verschillende apparaten.</span>
+</button>
+
+<button class="menu-button" onclick="openExplanation()">
+    <span class="menu-icon">❓</span>
+    <span class="menu-title">Uitleg</span>
+    <span class="menu-description">Bekijk hoe het spel werkt.</span>
+</button>
+
+</div>
+</div>
+
+</div>
+</section>
+
+
+<!-- ONLINE -->
+<section id="screen-online" class="screen">
+<div class="inner">
+
+<div class="topbar">
+    <button class="back" onclick="returnHome()">← Terug</button>
+    <div class="page-title">Online spelen 🌐</div>
+    <div></div>
+</div>
+
+<div class="center">
+
+<div class="online-wrapper">
+<div class="card">
+
+<div class="online-columns">
+
+<!-- SPELER 1 -->
+<div class="online-box">
+
+<h2>💻 Speler 1</h2>
+
+<button
+    id="createRoomButton"
+    class="primary"
+    onclick="createRoom()"
+>
+    ➕ Kamer maken
+</button>
+
+<div id="hostStatus" class="online-status">
+    Maak een kamer om te beginnen.
+</div>
+
+<div id="roomCode" class="room-code">
+    ------
+</div>
+
+<div style="color:#666b7b;font-size:10px;font-weight:700;">
+    Geef deze code aan speler 2.
+</div>
+
+<!-- DEZE KNOP WAS HET PROBLEEM -->
+<div id="hostNextArea" class="online-next">
+
+<button
+    id="hostNextButton"
+    class="primary"
+    onclick="hostGoToTheme()"
+>
+    ➡️ Verder
+</button>
+
+</div>
+
+</div>
+
+
+<!-- SPELER 2 -->
+<div class="online-box">
+
+<h2>📱 Speler 2</h2>
+
+<input
+    id="joinCode"
+    class="code-input"
+    maxlength="6"
+    autocomplete="off"
+    placeholder="CODE"
+>
+
+<div id="joinStatus" class="online-status">
+    Vul de code van speler 1 in.
+</div>
+
+<button
+    id="joinButton"
+    class="primary"
+    onclick="joinRoom()"
+>
+    🚀 Verbinden
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- SPELER 2 WACHT -->
+<section id="screen-online-wait" class="screen">
+<div class="inner">
+
+<div class="center">
+
+<div class="waiting-card">
+
+<div class="waiting-icon">📱</div>
+
+<div class="waiting-title">
+    Je bent speler 2!
+</div>
+
+<div id="guestWaitingText" class="waiting-text">
+    Je bent verbonden met speler 1.<br>
+    Wacht tot speler 1 het spel start.
+</div>
+
+<div style="
+    margin-top:15px;
+    color:#269862;
+    font-size:13px;
+    font-weight:1000;
+">
+    🟢 Verbonden
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- THEMA -->
+<section id="screen-theme" class="screen">
+<div class="inner">
+
+<div class="topbar">
+
+<button class="back" onclick="previousFromTheme()">
+    ← Terug
+</button>
+
+<div class="page-title">
+    Kies je thema 🎨
+</div>
+
+<div></div>
+
+</div>
+
+<div class="theme-area">
+    <div id="themeGrid" class="grid"></div>
+</div>
+
+<div class="bottom">
+<button class="primary" onclick="continueTheme()">
+    Verder →
+</button>
+</div>
+
+</div>
+</section>
+
+
+<!-- SETTINGS -->
+<section id="screen-settings" class="screen">
+<div class="inner">
+
+<div class="topbar">
+
+<button class="back" onclick="previousFromSettings()">
+    ← Terug
+</button>
+
+<div class="page-title">
+    Instellingen ⚙️
+</div>
+
+<div></div>
+
+</div>
+
+<div class="center">
+
+<div class="card">
+
+<div class="setting">
+
+<div class="setting-title">👗 Kleding</div>
+
+<div class="options">
+
+<button id="outfit-girls" class="option" onclick="setOutfit('girls')">
+    👧 Meisjes
+</button>
+
+<button id="outfit-boys" class="option" onclick="setOutfit('boys')">
+    👦 Jongens
+</button>
+
+<button id="outfit-mixed" class="option" onclick="setOutfit('mixed')">
+    🌈 Gemengd
+</button>
+
+</div>
+</div>
+
+
+<div class="setting">
+
+<div class="setting-title">🍕 Eten</div>
+
+<div class="options">
+
+<button id="food-veg" class="option" onclick="setFood('veg')">
+    🥦 Vegetarisch
+</button>
+
+<button id="food-nonveg" class="option" onclick="setFood('nonveg')">
+    🍖 Niet vegetarisch
+</button>
+
+<button id="food-mixed" class="option" onclick="setFood('mixed')">
+    🍽️ Gemengd
+</button>
+
+</div>
+</div>
+
+
+<div class="setting">
+
+<div class="setting-title">🤖 Computercommentaar</div>
+
+<div class="options">
+
+<button id="comment-on" class="option" onclick="setCommentary(true)">
+    💬 Aan
+</button>
+
+<button id="comment-off" class="option" onclick="setCommentary(false)">
+    🔇 Uit
+</button>
+
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="bottom">
+
+<button
+    id="startGameButton"
+    class="primary"
+    onclick="startGameFromSettings()"
+>
+    🚀 Start het spel
+</button>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- UITLEG -->
+<section id="screen-explanation" class="screen">
+<div class="inner">
+
+<div class="topbar">
+
+<button class="back" onclick="returnHome()">
+    ← Terug
+</button>
+
+<div class="page-title">
+    Uitleg 📖
+</div>
+
+<div></div>
+
+</div>
+
+<div class="center">
+
+<div class="card">
+
+<div class="rule">
+<div class="rule-icon">💰</div>
+<div>
+<strong>Iedereen begint met €20</strong>
+<span>Beide spelers hebben hun eigen budget.</span>
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-icon">🎁</div>
+<div>
+<strong>Er verschijnt één item</strong>
+<span>Bijvoorbeeld een gigantische woonkamer.</span>
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-icon">🔄</div>
+<div>
+<strong>Om de beurt bieden</strong>
+<span>Speler 1 → speler 2 → speler 1 → speler 2.</span>
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-icon">📡</div>
+<div>
+<strong>Online wordt alles gesynchroniseerd</strong>
+<span>Iedere bieding verschijnt op beide schermen.</span>
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-icon">💸</div>
+<div>
+<strong>Alleen de winnaar betaalt</strong>
+<span>Het bedrag wordt pas afgetrokken wanneer de veiling eindigt.</span>
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-icon">🏆</div>
+<div>
+<strong>Verzamel je items</strong>
+<span>Aan het einde zie je jouw collectie.</span>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- GAME -->
+<section id="screen-game" class="screen game">
+
+<div class="game-layout">
+
+<div class="game-header">
+
+<div class="money-box">
+<div class="name">👤 Speler 1</div>
+<div id="p1Money" class="money">€20</div>
+</div>
+
+<div class="round">
+<div id="gameThemeName">DROOMHUIS</div>
+<div id="roundText">1 / 6</div>
+</div>
+
+<div class="money-box right">
+<div class="name">👤 Speler 2</div>
+<div id="p2Money" class="money">€20</div>
+</div>
+
+</div>
+
+
+<div class="auction">
+
+<div class="collection-panel">
+
+<div class="panel-title">
+    SPELER 1
+</div>
+
+<div id="collection1" class="collection"></div>
+
+</div>
+
+
+<div class="center-auction">
+
+<div class="item-card">
+
+<div id="itemIcon" class="item-icon">
+    🏠
+</div>
+
+<div id="category" class="category">
+    DROOMHUIS
+</div>
+
+<div id="itemName" class="item-name">
+    Gigantische woonkamer
+</div>
+
+<div id="bidInfo" class="bid-info">
+    Nog geen bod
+</div>
+
+<div id="leader" class="leader">
+    Speler 1 begint
+</div>
+
+</div>
+
+
+<div id="comment" class="comment"></div>
+
+
+<div class="bid-row">
+
+<input
+    id="bidInput"
+    class="bid-input"
+    type="number"
+    inputmode="numeric"
+    min="1"
+    placeholder="€ bod"
+>
+
+<button
+    id="bidButton"
+    class="bid-button"
+    onclick="makeBid()"
+>
+    💸 Bieden
+</button>
+
+</div>
+
+
+<button
+    id="giveButton"
+    class="give"
+    onclick="giveItem()"
+>
+    🤝 Ik geef het aan jou
+</button>
+
+
+<div id="turn" class="turn">
+    Speler 1 is aan de beurt
+</div>
+
+</div>
+
+
+<div class="collection-panel">
+
+<div class="panel-title">
+    SPELER 2
+</div>
+
+<div id="collection2" class="collection"></div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- RESULT -->
+<section id="screen-result" class="screen">
+
+<div class="inner">
+
+<div class="center">
+
+<div class="card result-card">
+
+<div class="trophy">🏆</div>
+
+<div id="resultTitle" class="result-title">
+    Klaar!
+</div>
+
+<div id="resultSubtitle" class="result-subtitle">
+    Het spel is afgelopen.
+</div>
+
+<div class="result-grid">
+
+<div class="result-player">
+<strong>👤 Speler 1</strong>
+<div id="result1"></div>
+</div>
+
+<div class="result-player">
+<strong>👤 Speler 2</strong>
+<div id="result2"></div>
+</div>
+
+</div>
+
+<button class="primary" onclick="restartGame()">
+    🔄 Opnieuw spelen
+</button>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<div id="toast" class="toast"></div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   THEMA'S
+========================================================= */
+
+const themes={
+
+huis:{
+name:"Droomhuis",
+icon:"🏠",
+items:[
+["🛋️","Gigantische woonkamer"],
+["🍳","Luxe keuken"],
+["🛏️","Droomslaapkamer"],
+["🌳","Gigantische tuin"],
+["🏊","Infinity pool"],
+["🎬","Privébioscoop"]
+]
+},
+
+eten:{
+name:"Perfect eten",
+icon:"🍕",
+items:[
+["🍕","Grote pizza"],
+["🍔","Mega burger"],
+["🍟","Frietjes"],
+["🍰","Gigantische taart"],
+["🍫","Chocoladefontein"],
+["🥤","Oneindige drankjes"]
+]
+},
+
+vakantie:{
+name:"Perfecte vakantie",
+icon:"✈️",
+items:[
+["✈️","Vliegtuig"],
+["🏨","Luxe hotel"],
+["🏖️","Privéstrand"],
+["🚤","Speedboot"],
+["🎢","Pretpark"],
+["🌅","Perfecte zonsondergang"]
+]
+},
+
+outfit:{
+name:"Perfecte outfit",
+icon:"👗",
+items:[
+["👕","Top"],
+["👖","Broek"],
+["👟","Sneakers"],
+["🧥","Jas"],
+["🕶️","Zonnebril"],
+["🎒","Tas"]
+]
+},
+
+feest:{
+name:"Perfect feest",
+icon:"🎉",
+items:[
+["🎈","Ballonnen"],
+["🎵","DJ"],
+["🍕","Feesteten"],
+["💡","Lichtshow"],
+["🎂","Taart"],
+["🎁","Cadeaus"]
+]
+},
+
+dag:{
+name:"Perfecte dag",
+icon:"☀️",
+items:[
+["🌅","Perfecte ochtend"],
+["🥞","Mega ontbijt"],
+["🎮","Gamingmoment"],
+["🏖️","Middaguitje"],
+["🍕","Perfect diner"],
+["🌙","Filmavond"]
+]
+},
+
+gaming:{
+name:"Perfecte gaming setup",
+icon:"🎮",
+items:[
+["🖥️","Ultrawide monitor"],
+["⌨️","Gaming toetsenbord"],
+["🖱️","Gaming muis"],
+["🎧","Gaming headset"],
+["💺","Gamingstoel"],
+["💡","RGB verlichting"]
+]
+},
+
+strand:{
+name:"Perfecte stranddag",
+icon:"🏖️",
+items:[
+["☀️","Zonneschijn"],
+["🌊","Helderblauw water"],
+["🏄","Surfboard"],
+["🍦","IJsje"],
+["🥥","Verse kokosnoot"],
+["🏝️","Privé-eiland"]
+]
+},
+
+film:{
+name:"Perfecte filmavond",
+icon:"🎬",
+items:[
+["📺","Gigantisch scherm"],
+["🍿","Popcorn"],
+["🛋️","Superbank"],
+["🥤","Drankjes"],
+["🌙","Donkere kamer"],
+["🎞️","Favoriete film"]
+]
+},
+
+muziek:{
+name:"Perfecte muziekdag",
+icon:"🎵",
+items:[
+["🎧","Koptelefoon"],
+["🔊","Gigantische speakers"],
+["🎸","Gitaar"],
+["🥁","Drumstel"],
+["🎤","Microfoon"],
+["🎶","Live concert"]
+]
+},
+
+school:{
+name:"Perfecte schooldag",
+icon:"🏫",
+items:[
+["📚","Geen huiswerk"],
+["🍕","Lange middagpauze"],
+["🎮","Gamingles"],
+["🛋️","Comfortabele stoel"],
+["🍫","Gratis snacks"],
+["🎉","Geen toetsen"]
+]
+},
+
+shoppen:{
+name:"Perfecte shopdag",
+icon:"🛍️",
+items:[
+["👟","Nieuwe sneakers"],
+["👕","Nieuwe kleding"],
+["🎧","Nieuwe headset"],
+["🍦","IJsje"],
+["💳","Onbeperkt budget"],
+["🏬","Gigantisch winkelcentrum"]
+]
+},
+
+huisdier:{
+name:"Perfect huisdier",
+icon:"🐶",
+items:[
+["🐶","Hond"],
+["🐱","Kat"],
+["🐰","Konijn"],
+["🐹","Hamster"],
+["🐠","Aquarium"],
+["🛏️","Supermand"]
+]
+},
+
+verjaardag:{
+name:"Perfecte verjaardag",
+icon:"🎂",
+items:[
+["🎂","Gigantische taart"],
+["🎁","Mega veel cadeaus"],
+["🎈","Ballonnen"],
+["🎉","Groot feest"],
+["🎵","DJ"],
+["🍕","Feestbuffet"]
+]
+},
+
+auto:{
+name:"Perfecte auto",
+icon:"🚗",
+items:[
+["🏎️","Supersnelle auto"],
+["🎵","Mega geluidsinstallatie"],
+["🪑","Luxe zetels"],
+["💡","Neonlichten"],
+["🛞","Speciale velgen"],
+["🌟","Panoramadak"]
+]
+},
+
+droomwereld:{
+name:"Droomwereld",
+icon:"🌈",
+items:[
+["🏰","Magisch kasteel"],
+["🐉","Drakenvriend"],
+["🪽","Kunnen vliegen"],
+["✨","Magische krachten"],
+["🌌","Sterrenhemel"],
+["🦄","Eenhoorn"]
+]
+}
+
+};
+
+
+/* =========================================================
+   SPELVARIABELEN
+========================================================= */
+
+let gameMode="computer";
+
+let selectedTheme="huis";
+
+let outfitStyle="mixed";
+let foodStyle="mixed";
+let commentary=true;
+
+let items=[];
+let itemIndex=0;
+
+let player1Money=20;
+let player2Money=20;
+
+let player1Collection=[];
+let player2Collection=[];
+
+let currentBid=0;
+let leader=null;
+
+let currentTurn="player1";
+let startingPlayer="player1";
+
+let gameActive=false;
+
+
+/* =========================================================
+   ONLINE
+========================================================= */
+
+let peer=null;
+let connection=null;
+
+let onlineHost=false;
+let onlineConnected=false;
+
+let onlineRoomCode="";
+
+let waitingForOnlineResponse=false;
+
+const PEER_PREFIX="dreamdraft-v5-";
+
+
+/* =========================================================
+   TIMERS
+========================================================= */
+
+let computerTimer=null;
+let roundTimer=null;
+
+
+/* =========================================================
+   SCHERM
+========================================================= */
+
+function showScreen(id){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen=>{
+            screen.classList.remove("active");
+        });
+
+    const screen=document.getElementById(id);
+
+    if(screen){
+        screen.classList.add("active");
+    }
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function returnHome(){
+
+    disconnectPeer();
+
+    gameActive=false;
+
+    showScreen("screen-start");
+}
+
+
+function restartGame(){
+
+    disconnectPeer();
+
+    location.reload();
+}
+
+
+/* =========================================================
+   MODES
+========================================================= */
+
+function selectMode(mode){
+
+    gameMode=mode;
+
+    renderThemes();
+
+    showScreen("screen-theme");
+}
+
+
+function openOnline(){
+
+    gameMode="online";
+
+    /*
+       Reset de online UI.
+    */
+
+    document.getElementById("hostNextArea").classList.remove("show");
+
+    document.getElementById("hostStatus").textContent=
+        "Maak een kamer om te beginnen.";
+
+    document.getElementById("roomCode").textContent=
+        "------";
+
+    document.getElementById("joinStatus").textContent=
+        "Vul de code van speler 1 in.";
+
+    document.getElementById("joinButton").disabled=false;
+
+    showScreen("screen-online");
+}
+
+
+function openExplanation(){
+
+    showScreen("screen-explanation");
+}
+
+
+/* =========================================================
+   THEMA
+========================================================= */
+
+function renderThemes(){
+
+    const grid=document.getElementById("themeGrid");
+
+    grid.innerHTML="";
+
+    Object.entries(themes).forEach(([key,theme])=>{
+
+        const button=document.createElement("button");
+
+        button.className=
+            "choice"+
+            (key===selectedTheme ? " selected" : "");
+
+        button.innerHTML=`
+            <span class="choice-icon">${theme.icon}</span>
+            ${theme.name}
+        `;
+
+        button.onclick=()=>{
+
+            selectedTheme=key;
+
+            renderThemes();
+        };
+
+        grid.appendChild(button);
+
+    });
+}
+
+
+function previousFromTheme(){
+
+    if(gameMode==="online"){
+        showScreen("screen-online");
+    }else{
+        showScreen("screen-start");
+    }
+}
+
+
+function previousFromSettings(){
+
+    showScreen("screen-theme");
+}
+
+
+/* =========================================================
+   THEMA VERDER
+========================================================= */
+
+function continueTheme(){
+
+    /*
+       BIJ ONLINE:
+       alleen speler 1 mag verder.
+    */
+
+    if(gameMode==="online" && !onlineHost){
+
+        showToast(
+            "Wacht tot speler 1 het spel start."
+        );
+
+        return;
+    }
+
+    updateSettingsUI();
+
+    showScreen("screen-settings");
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function setOutfit(value){
+
+    outfitStyle=value;
+
+    updateSettingsUI();
+}
+
+
+function setFood(value){
+
+    foodStyle=value;
+
+    updateSettingsUI();
+}
+
+
+function setCommentary(value){
+
+    commentary=value;
+
+    updateSettingsUI();
+}
+
+
+function updateSettingsUI(){
+
+    document
+        .querySelectorAll(".option")
+        .forEach(button=>{
+            button.classList.remove("selected");
+        });
+
+    document
+        .getElementById("outfit-"+outfitStyle)
+        ?.classList.add("selected");
+
+    document
+        .getElementById("food-"+foodStyle)
+        ?.classList.add("selected");
+
+    document
+        .getElementById(
+            commentary ? "comment-on" : "comment-off"
+        )
+        ?.classList.add("selected");
+}
+
+
+/* =========================================================
+   SPELER 1 KLIKT OP VERDER
+========================================================= */
+
+function hostGoToTheme(){
+
+    if(!onlineHost){
+        return;
+    }
+
+    if(!onlineConnected){
+
+        showToast(
+            "Speler 2 is nog niet verbonden."
+        );
+
+        return;
+    }
+
+    renderThemes();
+
+    showScreen("screen-theme");
+}
+
+
+/* =========================================================
+   GAME START
+========================================================= */
+
+function startGameFromSettings(){
+
+    if(gameMode==="online"){
+
+        if(!onlineHost){
+
+            showToast(
+                "Alleen speler 1 kan het spel starten."
+            );
+
+            return;
+        }
+
+        if(!onlineConnected){
+
+            showToast(
+                "Speler 2 is nog niet verbonden."
+            );
+
+            return;
+        }
+
+        startOnlineGame();
+
+        return;
+    }
+
+    startNormalGame();
+}
+
+
+/* =========================================================
+   NORMAAL SPEL
+========================================================= */
+
+function startNormalGame(){
+
+    player1Money=20;
+    player2Money=20;
+
+    player1Collection=[];
+    player2Collection=[];
+
+    items=JSON.parse(
+        JSON.stringify(
+            themes[selectedTheme].items
+        )
+    );
+
+    itemIndex=0;
+
+    currentBid=0;
+    leader=null;
+
+    startingPlayer="player1";
+    currentTurn="player1";
+
+    gameActive=true;
+
+    showScreen("screen-game");
+
+    prepareRound();
+}
+
+
+/* =========================================================
+   RONDE
+========================================================= */
+
+function prepareRound(){
+
+    clearTimeout(computerTimer);
+    clearTimeout(roundTimer);
+
+    if(itemIndex>=items.length){
+
+        finishGame();
+
+        return;
+    }
+
+    currentBid=0;
+    leader=null;
+
+    currentTurn=startingPlayer;
+
+    const item=items[itemIndex];
+
+    document.getElementById("itemIcon").textContent=item[0];
+
+    document.getElementById("itemName").textContent=item[1];
+
+    document.getElementById("category").textContent=
+        themes[selectedTheme].name;
+
+    document.getElementById("gameThemeName").textContent=
+        themes[selectedTheme].name;
+
+    document.getElementById("roundText").textContent=
+        `${itemIndex+1} / ${items.length}`;
+
+    document.getElementById("bidInput").value="";
+
+    document.getElementById("comment").textContent="";
+
+    waitingForOnlineResponse=false;
+
+    updateGameUI();
+
+    if(
+        gameMode==="computer" &&
+        currentTurn==="player2"
+    ){
+
+        computerTimer=setTimeout(
+            computerBid,
+            900
+        );
+    }
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateGameUI(){
+
+    document.getElementById("p1Money").textContent=
+        "€"+player1Money;
+
+    document.getElementById("p2Money").textContent=
+        "€"+player2Money;
+
+    renderCollection(
+        "collection1",
+        player1Collection
+    );
+
+    renderCollection(
+        "collection2",
+        player2Collection
+    );
+
+    if(currentBid===0){
+
+        document.getElementById("bidInfo").textContent=
+            "Nog geen bod";
+
+        document.getElementById("leader").textContent=
+            currentTurn==="player1"
+            ? "👤 Speler 1 begint"
+            : "👤 Speler 2 begint";
+
+    }else{
+
+        document.getElementById("bidInfo").textContent=
+            "Bod: €"+currentBid;
+
+        document.getElementById("leader").textContent=
+            leader==="player1"
+            ? `👤 Speler 1 heeft €${currentBid} geboden`
+            : `👤 Speler 2 heeft €${currentBid} geboden`;
+    }
+
+    updateTurnUI();
+}
+
+
+/* =========================================================
+   COLLECTIE
+========================================================= */
+
+function renderCollection(id,collection){
+
+    const element=document.getElementById(id);
+
+    element.innerHTML="";
+
+    collection.forEach(item=>{
+
+        const div=document.createElement("div");
+
+        div.className="collection-item";
+
+        div.textContent=item[0];
+
+        div.title=item[1];
+
+        element.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   BEURT
+========================================================= */
+
+function updateTurnUI(){
+
+    const input=document.getElementById("bidInput");
+    const bid=document.getElementById("bidButton");
+    const give=document.getElementById("giveButton");
+    const turn=document.getElementById("turn");
+
+    if(!gameActive){
+
+        input.disabled=true;
+        bid.disabled=true;
+        give.disabled=true;
+
+        return;
+    }
+
+
+    /* COMPUTER */
+
+    if(gameMode==="computer"){
+
+        const myTurn=currentTurn==="player1";
+
+        input.disabled=!myTurn;
+        bid.disabled=!myTurn;
+        give.disabled=!myTurn;
+
+        turn.textContent=
+            myTurn
+            ? "🟢 Jij bent aan de beurt!"
+            : "🤖 De computer is aan de beurt...";
+
+        return;
+    }
+
+
+    /* LOCAL */
+
+    if(gameMode==="local"){
+
+        input.disabled=false;
+        bid.disabled=false;
+        give.disabled=false;
+
+        turn.textContent=
+            currentTurn==="player1"
+            ? "🟢 Speler 1 is aan de beurt"
+            : "🟢 Speler 2 is aan de beurt";
+
+        return;
+    }
+
+
+    /* ONLINE */
+
+    if(gameMode==="online"){
+
+        const myTurn=
+            onlineHost
+            ? currentTurn==="player1"
+            : currentTurn==="player2";
+
+        const locked=waitingForOnlineResponse;
+
+        input.disabled=!myTurn || locked;
+        bid.disabled=!myTurn || locked;
+        give.disabled=!myTurn || locked;
+
+        if(locked){
+
+            turn.textContent=
+                "📡 Even wachten...";
+
+        }else if(myTurn){
+
+            turn.textContent=
+                "🟢 JIJ BENT AAN DE BEURT!";
+
+        }else{
+
+            turn.textContent=
+                "⏳ Wachten op de andere speler...";
+        }
+    }
+}
+
+
+/* =========================================================
+   BIEDEN
+========================================================= */
+
+function makeBid(){
+
+    if(!gameActive){
+        return;
+    }
+
+    const input=document.getElementById("bidInput");
+
+    const amount=Number(input.value);
+
+    if(
+        !Number.isFinite(amount) ||
+        amount<=0
+    ){
+
+        showToast("Vul een geldig bod in.");
+
+        return;
+    }
+
+
+    /* ONLINE SPELER 2 */
+
+    if(
+        gameMode==="online" &&
+        !onlineHost
+    ){
+
+        if(currentTurn!=="player2"){
+
+            showToast(
+                "Je bent nu niet aan de beurt."
+            );
+
+            return;
+        }
+
+        if(amount>player2Money){
+
+            showToast(
+                "Je hebt niet genoeg geld."
+            );
+
+            return;
+        }
+
+        if(amount<=currentBid){
+
+            showToast(
+                `Je moet hoger bieden dan €${currentBid}.`
+            );
+
+            return;
+        }
+
+        waitingForOnlineResponse=true;
+
+        updateTurnUI();
+
+        sendOnline({
+
+            type:"PLAYER_ACTION",
+            action:"BID",
+            player:"player2",
+            amount:amount
+
+        });
+
+        input.value="";
+
+        return;
+    }
+
+
+    /* ONLINE HOST */
+
+    if(
+        gameMode==="online" &&
+        onlineHost &&
+        currentTurn!=="player1"
+    ){
+
+        showToast(
+            "Speler 2 is aan de beurt."
+        );
+
+        return;
+    }
+
+
+    const money=
+        currentTurn==="player1"
+        ?player1Money
+        :player2Money;
+
+    if(amount>money){
+
+        showToast(
+            "Je hebt niet genoeg geld."
+        );
+
+        return;
+    }
+
+    if(amount<=currentBid){
+
+        showToast(
+            `Je moet hoger bieden dan €${currentBid}.`
+        );
+
+        return;
+    }
+
+    processBid(
+        currentTurn,
+        amount
+    );
+}
+
+
+/* =========================================================
+   BOD VERWERKEN
+========================================================= */
+
+function processBid(player,amount){
+
+    if(!gameActive){
+        return;
+    }
+
+    if(player!==currentTurn){
+        return;
+    }
+
+    const money=
+        player==="player1"
+        ?player1Money
+        :player2Money;
+
+    if(amount>money){
+        return;
+    }
+
+    if(amount<=currentBid){
+        return;
+    }
+
+    currentBid=amount;
+
+    leader=player;
+
+    currentTurn=
+        player==="player1"
+        ? "player2"
+        : "player1";
+
+    waitingForOnlineResponse=false;
+
+    document.getElementById("bidInput").value="";
+
+    updateGameUI();
+
+
+    if(
+        gameMode==="online" &&
+        onlineHost
+    ){
+
+        sendGameState();
+    }
+
+
+    if(
+        gameMode==="computer" &&
+        currentTurn==="player2"
+    ){
+
+        computerTimer=setTimeout(
+            computerBid,
+            900
+        );
+    }
+}
+
+
+/* =========================================================
+   COMPUTER
+========================================================= */
+
+function computerBid(){
+
+    if(
+        !gameActive ||
+        gameMode!=="computer" ||
+        currentTurn!=="player2"
+    ){
+        return;
+    }
+
+    const minimum=currentBid+1;
+
+    if(player2Money<minimum){
+
+        finishAuction(
+            leader || "player1",
+            currentBid
+        );
+
+        return;
+    }
+
+    const maximum=Math.min(
+        player2Money,
+        Math.max(
+            minimum,
+            Math.floor(player2Money*.75)
+        )
+    );
+
+    const amount=
+        Math.floor(
+            minimum+
+            Math.random()*
+            (maximum-minimum+1)
+        );
+
+    if(commentary){
+
+        const comments=[
+            "🤖 Deze wil ik!",
+            "🤖 Ik bied hierop!",
+            "🤖 Die hoort in mijn collectie!",
+            "🤖 Ik ga hoger!",
+            "🤖 Deze laat ik niet liggen!",
+            "🤖 Mijn beurt! 💸"
+        ];
+
+        document.getElementById("comment").textContent=
+            comments[
+                Math.floor(
+                    Math.random()*comments.length
+                )
+            ];
+    }
+
+    processBid(
+        "player2",
+        amount
+    );
+}
+
+
+/* =========================================================
+   GEEF HET ITEM
+========================================================= */
+
+function giveItem(){
+
+    if(!gameActive){
+        return;
+    }
+
+    if(
+        gameMode==="online" &&
+        !onlineHost
+    ){
+
+        if(currentTurn!=="player2"){
+            return;
+        }
+
+        waitingForOnlineResponse=true;
+
+        updateTurnUI();
+
+        sendOnline({
+
+            type:"PLAYER_ACTION",
+            action:"GIVE",
+            player:"player2"
+
+        });
+
+        return;
+    }
+
+    if(
+        gameMode==="online" &&
+        onlineHost &&
+        currentTurn!=="player1"
+    ){
+        return;
+    }
+
+    processGive(
+        currentTurn
+    );
+}
+
+
+/* =========================================================
+   GIVE VERWERKEN
+========================================================= */
+
+function processGive(player){
+
+    if(!gameActive){
+        return;
+    }
+
+    if(player!==currentTurn){
+        return;
+    }
+
+    if(currentBid===0){
+
+        const winner=
+            player==="player1"
+            ? "player2"
+            : "player1";
+
+        finishAuction(
+            winner,
+            0
+        );
+
+        return;
+    }
+
+    if(leader!==player){
+
+        finishAuction(
+            leader,
+            currentBid
+        );
+
+        return;
+    }
+
+    const other=
+        player==="player1"
+        ? "player2"
+        : "player1";
+
+    finishAuction(
+        other,
+        0
+    );
+}
+
+
+/* =========================================================
+   VEILING EINDE
+========================================================= */
+
+function finishAuction(winner,price){
+
+    clearTimeout(computerTimer);
+
+    if(!gameActive){
+        return;
+    }
+
+    const item=items[itemIndex];
+
+    if(winner==="player1"){
+
+        player1Collection.push(item);
+
+        player1Money-=price;
+
+    }else{
+
+        player2Collection.push(item);
+
+        player2Money-=price;
+    }
+
+    itemIndex++;
+
+    startingPlayer=
+        startingPlayer==="player1"
+        ? "player2"
+        : "player1";
+
+    currentBid=0;
+    leader=null;
+    currentTurn=startingPlayer;
+
+    waitingForOnlineResponse=false;
+
+    updateGameUI();
+
+
+    if(gameMode==="online"){
+
+        if(!onlineHost){
+            return;
+        }
+
+        sendGameState();
+
+        roundTimer=setTimeout(
+            ()=>{
+
+                prepareRound();
+
+                sendGameState();
+
+            },
+            700
+        );
+
+        return;
+    }
+
+
+    roundTimer=setTimeout(
+        ()=>{
+            prepareRound();
+        },
+        700
+    );
+}
+
+
+/* =========================================================
+   SPEL EINDE
+========================================================= */
+
+function finishGame(){
+
+    gameActive=false;
+
+    clearTimeout(computerTimer);
+    clearTimeout(roundTimer);
+
+    let title;
+
+    if(
+        player1Collection.length>
+        player2Collection.length
+    ){
+
+        title="🎉 Speler 1 heeft meer items!";
+
+    }else if(
+        player2Collection.length>
+        player1Collection.length
+    ){
+
+        title=
+            gameMode==="computer"
+            ? "🤖 De computer heeft meer items!"
+            : "🎉 Speler 2 heeft meer items!";
+
+    }else{
+
+        title="🤝 Gelijke stand!";
+    }
+
+    document.getElementById("resultTitle").textContent=title;
+
+    document.getElementById("resultSubtitle").textContent=
+        `Speler 1: ${player1Collection.length} items • Speler 2: ${player2Collection.length} items`;
+
+    document.getElementById("result1").textContent=
+        player1Collection
+            .map(item=>item[0])
+            .join(" ");
+
+    document.getElementById("result2").textContent=
+        player2Collection
+            .map(item=>item[0])
+            .join(" ");
+
+    showScreen("screen-result");
+
+
+    if(
+        gameMode==="online" &&
+        onlineHost
+    ){
+
+        sendOnline({
+
+            type:"GAME_OVER",
+
+            title:title,
+
+            player1Collection:
+                player1Collection,
+
+            player2Collection:
+                player2Collection,
+
+            player1Money:
+                player1Money,
+
+            player2Money:
+                player2Money
+        });
+    }
+}
+
+
+/* =========================================================
+   KAMER MAKEN
+========================================================= */
+
+function createRoom(){
+
+    disconnectPeer();
+
+    onlineHost=true;
+    onlineConnected=false;
+
+    gameMode="online";
+
+    const createButton=
+        document.getElementById("createRoomButton");
+
+    createButton.disabled=true;
+
+    document.getElementById("hostNextArea")
+        .classList.remove("show");
+
+    onlineRoomCode=
+        Math.random()
+        .toString(36)
+        .substring(2,8)
+        .toUpperCase();
+
+    document.getElementById("roomCode").textContent=
+        onlineRoomCode;
+
+    document.getElementById("hostStatus").textContent=
+        "⏳ Kamer wordt aangemaakt...";
+
+
+    peer=new Peer(
+        PEER_PREFIX+onlineRoomCode,
+        {
+            secure:true,
+            debug:1
+        }
+    );
+
+
+    peer.on("open",()=>{
+
+        document.getElementById("hostStatus").textContent=
+            "🟢 Kamer klaar! Wacht op speler 2.";
+
+    });
+
+
+    peer.on("connection",conn=>{
+
+        /*
+           Een host mag maar één speler 2 hebben.
+        */
+
+        if(connection){
+            try{
+                conn.close();
+            }catch(e){}
+
+            return;
+        }
+
+        connection=conn;
+
+        setupConnection(conn);
+    });
+
+
+    peer.on("error",error=>{
+
+        console.error(error);
+
+        document.getElementById("hostStatus").textContent=
+            "❌ Er ging iets mis. Maak een nieuwe kamer.";
+
+        createButton.disabled=false;
+    });
+}
+
+
+/* =========================================================
+   VERBINDEN ALS SPELER 2
+========================================================= */
+
+function joinRoom(){
+
+    const input=document.getElementById("joinCode");
+
+    const code=
+        input.value
+            .trim()
+            .toUpperCase();
+
+    if(code.length!==6){
+
+        showToast(
+            "De code moet 6 tekens hebben."
+        );
+
+        return;
+    }
+
+
+    disconnectPeer();
+
+    onlineHost=false;
+    onlineConnected=false;
+
+    gameMode="online";
+
+    document.getElementById("joinButton").disabled=true;
+
+    document.getElementById("joinStatus").textContent=
+        "⏳ Verbinding maken...";
+
+
+    peer=new Peer({
+        secure:true,
+        debug:1
+    });
+
+
+    peer.on("open",()=>{
+
+        connection=
+            peer.connect(
+                PEER_PREFIX+code,
+                {
+                    reliable:true
+                }
+            );
+
+        setupConnection(connection);
+
+    });
+
+
+    peer.on("error",error=>{
+
+        console.error(error);
+
+        document.getElementById("joinStatus").textContent=
+            "❌ Verbinden mislukt.";
+
+        document.getElementById("joinButton").disabled=false;
+    });
+}
+
+
+/* =========================================================
+   CONNECTION
+========================================================= */
+
+function setupConnection(conn){
+
+    if(!conn){
+        return;
+    }
+
+
+    conn.on("open",()=>{
+
+        connection=conn;
+
+        onlineConnected=true;
+
+
+        if(onlineHost){
+
+            /*
+               ⭐ BELANGRIJKE FIX ⭐
+
+               Speler 1 krijgt nu een knop
+               zodra speler 2 verbonden is.
+            */
+
+            document.getElementById("hostStatus").textContent=
+                "🎉 Speler 2 is verbonden!";
+
+            document.getElementById("hostNextArea")
+                .classList.add("show");
+
+
+            sendOnline({
+
+                type:"HOST_CONNECTED"
+            });
+
+
+        }else{
+
+            document.getElementById("joinStatus").textContent=
+                "🎉 Verbonden met speler 1!";
+
+            sendOnline({
+
+                type:"GUEST_CONNECTED"
+            });
+
+
+            /*
+               Speler 2 gaat NOOIT terug naar start.
+            */
+
+            setTimeout(()=>{
+
+                showScreen(
+                    "screen-online-wait"
+                );
+
+            },150);
+        }
+
+    });
+
+
+    conn.on("data",data=>{
+
+        receiveOnlineData(data);
+
+    });
+
+
+    conn.on("close",()=>{
+
+        onlineConnected=false;
+
+        if(gameActive){
+
+            showToast(
+                "De verbinding is verbroken."
+            );
+        }
+
+    });
+
+
+    conn.on("error",error=>{
+
+        console.error(error);
+
+        onlineConnected=false;
+
+    });
+}
+
+
+/* =========================================================
+   ONLINE VERZENDEN
+========================================================= */
+
+function sendOnline(data){
+
+    if(
+        !connection ||
+        !onlineConnected
+    ){
+        return false;
+    }
+
+    try{
+
+        connection.send(data);
+
+        return true;
+
+    }catch(error){
+
+        console.error(error);
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   ONLINE DATA
+========================================================= */
+
+function receiveOnlineData(data){
+
+    if(
+        !data ||
+        !data.type
+    ){
+        return;
+    }
+
+
+    /* HOST CONNECTED */
+
+    if(data.type==="HOST_CONNECTED"){
+
+        if(!onlineHost){
+
+            document.getElementById("joinStatus").textContent=
+                "🎉 Verbonden met speler 1!";
+        }
+
+        return;
+    }
+
+
+    /* GUEST CONNECTED */
+
+    if(data.type==="GUEST_CONNECTED"){
+
+        if(!onlineHost){
+            return;
+        }
+
+        /*
+           ⭐ HIER KOMT DE HOST-KNOP ⭐
+        */
+
+        document.getElementById("hostStatus").textContent=
+            "🎉 Speler 2 is verbonden!";
+
+        document.getElementById("hostNextArea")
+            .classList.add("show");
+
+        return;
+    }
+
+
+    /* PLAYER ACTION */
+
+    if(data.type==="PLAYER_ACTION"){
+
+        if(!onlineHost){
+            return;
+        }
+
+        if(data.player!=="player2"){
+            return;
+        }
+
+        if(currentTurn!=="player2"){
+            sendGameState();
+            return;
+        }
+
+
+        if(data.action==="BID"){
+
+            const amount=Number(data.amount);
+
+            if(
+                !Number.isFinite(amount) ||
+                amount<=currentBid ||
+                amount>player2Money
+            ){
+
+                sendGameState();
+
+                return;
+            }
+
+            processBid(
+                "player2",
+                amount
+            );
+
+            return;
+        }
+
+
+        if(data.action==="GIVE"){
+
+            processGive(
+                "player2"
+            );
+
+            return;
+        }
+
+        return;
+    }
+
+
+    /* GAME START */
+
+    if(data.type==="GAME_START"){
+
+        if(onlineHost){
+            return;
+        }
+
+        applyOnlineState(data);
+
+        return;
+    }
+
+
+    /* GAME STATE */
+
+    if(data.type==="GAME_STATE"){
+
+        if(onlineHost){
+            return;
+        }
+
+        applyOnlineState(data);
+
+        return;
+    }
+
+
+    /* GAME OVER */
+
+    if(data.type==="GAME_OVER"){
+
+        if(onlineHost){
+            return;
+        }
+
+        player1Collection=
+            data.player1Collection || [];
+
+        player2Collection=
+            data.player2Collection || [];
+
+        player1Money=data.player1Money;
+        player2Money=data.player2Money;
+
+        document.getElementById("resultTitle").textContent=
+            data.title;
+
+        document.getElementById("resultSubtitle").textContent=
+            `Speler 1: ${player1Collection.length} items • Speler 2: ${player2Collection.length} items`;
+
+        document.getElementById("result1").textContent=
+            player1Collection
+                .map(item=>item[0])
+                .join(" ");
+
+        document.getElementById("result2").textContent=
+            player2Collection
+                .map(item=>item[0])
+                .join(" ");
+
+        gameActive=false;
+
+        showScreen("screen-result");
+
+        return;
+    }
+}
+
+
+/* =========================================================
+   ONLINE GAME START
+========================================================= */
+
+function startOnlineGame(){
+
+    if(!onlineHost){
+        return;
+    }
+
+    if(!onlineConnected){
+
+        showToast(
+            "Speler 2 is nog niet verbonden."
+        );
+
+        return;
+    }
+
+
+    items=
+        JSON.parse(
+            JSON.stringify(
+                themes[selectedTheme].items
+            )
+        );
+
+    player1Money=20;
+    player2Money=20;
+
+    player1Collection=[];
+    player2Collection=[];
+
+    itemIndex=0;
+
+    currentBid=0;
+    leader=null;
+
+    startingPlayer="player1";
+    currentTurn="player1";
+
+    gameActive=true;
+
+    showScreen("screen-game");
+
+    prepareRound();
+
+    /*
+       De volledige spelinstelling
+       gaat naar speler 2.
+    */
+
+    sendGameState(true);
+}
+
+
+/* =========================================================
+   GAME STATE VERSTUREN
+========================================================= */
+
+function sendGameState(isStart=false){
+
+    if(
+        !onlineHost ||
+        !onlineConnected
+    ){
+        return;
+    }
+
+    sendOnline({
+
+        type:
+            isStart
+            ? "GAME_START"
+            : "GAME_STATE",
+
+        selectedTheme:selectedTheme,
+
+        outfitStyle:outfitStyle,
+
+        foodStyle:foodStyle,
+
+        commentary:commentary,
+
+        items:items,
+
+        itemIndex:itemIndex,
+
+        currentBid:currentBid,
+
+        leader:leader,
+
+        currentTurn:currentTurn,
+
+        startingPlayer:startingPlayer,
+
+        player1Money:player1Money,
+
+        player2Money:player2Money,
+
+        player1Collection:player1Collection,
+
+        player2Collection:player2Collection
+
+    });
+}
+
+
+/* =========================================================
+   STATE OP GAST
+========================================================= */
+
+function applyOnlineState(data){
+
+    selectedTheme=data.selectedTheme;
+
+    outfitStyle=data.outfitStyle;
+
+    foodStyle=data.foodStyle;
+
+    commentary=data.commentary;
+
+    items=data.items || [];
+
+    itemIndex=data.itemIndex;
+
+    currentBid=data.currentBid;
+
+    leader=data.leader;
+
+    currentTurn=data.currentTurn;
+
+    startingPlayer=data.startingPlayer;
+
+    player1Money=data.player1Money;
+
+    player2Money=data.player2Money;
+
+    player1Collection=data.player1Collection || [];
+
+    player2Collection=data.player2Collection || [];
+
+    waitingForOnlineResponse=false;
+
+
+    const item=items[itemIndex];
+
+    if(item){
+
+        document.getElementById("itemIcon").textContent=
+            item[0];
+
+        document.getElementById("itemName").textContent=
+            item[1];
+
+        document.getElementById("category").textContent=
+            themes[selectedTheme].name;
+
+        document.getElementById("gameThemeName").textContent=
+            themes[selectedTheme].name;
+
+        document.getElementById("roundText").textContent=
+            `${itemIndex+1} / ${items.length}`;
+    }
+
+
+    gameActive=true;
+
+    updateGameUI();
+
+    /*
+       Speler 2 komt automatisch in het spel.
+    */
+
+    showScreen("screen-game");
+}
+
+
+/* =========================================================
+   DISCONNECT
+========================================================= */
+
+function disconnectPeer(){
+
+    onlineConnected=false;
+    waitingForOnlineResponse=false;
+
+    if(connection){
+
+        try{
+            connection.close();
+        }catch(e){}
+
+        connection=null;
+    }
+
+    if(peer){
+
+        try{
+            peer.destroy();
+        }catch(e){}
+
+        peer=null;
+    }
+
+    onlineHost=false;
+}
+
+
+/* =========================================================
+   ENTER = BIEDEN
+========================================================= */
+
+document.addEventListener("keydown",event=>{
+
+    if(event.key!=="Enter"){
+        return;
+    }
+
+    const input=document.getElementById("bidInput");
+
+    if(
+        document.activeElement===input &&
+        !input.disabled
+    ){
+
+        makeBid();
+    }
+});
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer=null;
+
+function showToast(message){
+
+    const toast=document.getElementById("toast");
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(
+        ()=>{
+            toast.classList.remove("show");
+        },
+        2200
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+renderThemes();
+
+updateSettingsUI();
+
+</script>
+
+</body>
+</html>
